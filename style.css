@@ -11,4 +11,8 @@
 
 body{
     background-color: darkgray;
+    font-family: "Comic Sans MS";
+    overflow: hidden;
+    margin: 0;
+    user-select: none;
 }
