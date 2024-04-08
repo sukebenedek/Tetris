@@ -1,6 +1,10 @@
 top score kukiba mentés
 forgatás
-többi faly
+jobra balra
+többi falyta
+robbanás
+vége
+sor törlés
 
 
 
