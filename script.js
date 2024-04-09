@@ -101,17 +101,19 @@ function stopControllables(){
 }
 
 function changeST(c1, c2){
-    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type}
+    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type, center: c2.center}
     c2.st = c1.st
     c2.shouldMove = c1.shouldMove
     c2.controllable = c1.controllable
     c2.type = c1.type
+    c2.center = c1.center
 
     
     c1.st = temp.st
     c1.shouldMove = temp.shouldMove
     c1.controllable = temp.controllable
     c1.type = temp.type
+    c1.center = temp.center
 
     c2.didMove = true
     c1.didMove = true
@@ -206,10 +208,22 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             return;
         }
 
+        let center = null
         for (let c of control) {
-            console.log(c.x + ", " + c.y);
+            if(c.cell.center){
+                // console.log(c.x + ", " + c.y);
+                clearInterval(moveInterval)
+                center = {x: c.x, y: c.y}
+            }
         }
 
+        list = []
+        for (let i = center.x - 1; i <= center.x + 1; i++) {
+            for (let j = center.y - 1; j <= center.y + 1; j++) {
+                list.push(g[i][j])
+            }
+        }
+        console.log(list);
 
     }
 
