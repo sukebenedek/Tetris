@@ -5,6 +5,9 @@ forgatás index hiba fix
 forgatás hitbox fix
 interval törlés újraindítás
 next piece
+színek
+fps++
+
 
 
 
