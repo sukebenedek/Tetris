@@ -21,7 +21,7 @@ class Cell{
 
     static placeNewPiece(g, next){
         // let t = randomElement(["I", "J", "L", "O", "S", "T", "Z"])
-        let t = randomElement(["I", "J","O"])
+        let t = randomElement(["I", "J","O", "L", "S", "Z", "T"])
         let center = Math.floor(maxInRows/2) - 2
         switch (t) {
             case "I":
@@ -33,7 +33,7 @@ class Cell{
                 for (let o = 0; o < 3; o++) {
                     g[1][o + center] = new Cell(false, t)
                 }
-                g[0][center] = new Cell(false)
+                g[0][center] = new Cell(false, t)
                 break
             case "O": 
                 for (let o = 1; o < 3; o++) {
@@ -43,6 +43,30 @@ class Cell{
                     g[0][o + center] = new Cell(false, t)
                 }
                 break
-            }
+            case "L":
+                for (let o = 0; o < 3; o++) {
+                    g[1][o + center] = new Cell(false, t)
+                }
+                g[0][center + 2] = new Cell(false, t)
+                break
+            case "S":
+                for (let o = 0; o < 2; o++) {
+                    g[1][center + o] = new Cell(false, t)
+                    g[0][center + o + 1] = new Cell(false, t)
+                }
+                break;
+            case "Z":
+                for (let o = 0; o < 2; o++) {
+                    g[1][2 + center - o] = new Cell(false, t)
+                    g[0][center - o + 1] = new Cell(false, t)
+                }
+                break;
+            case "T":
+                g[1][1 + center] = new Cell(false, t)
+                for (let o = 0; o < 3; o++) {
+                    g[0][center + o] = new Cell(false, t);
+                }
+                break;
+        }
     }
 }
