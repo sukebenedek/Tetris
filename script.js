@@ -101,14 +101,17 @@ function stopControllables(){
 }
 
 function changeST(c1, c2){
-    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable}
+    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type}
     c2.st = c1.st
     c2.shouldMove = c1.shouldMove
     c2.controllable = c1.controllable
+    c2.type = c1.type
+
     
     c1.st = temp.st
     c1.shouldMove = temp.shouldMove
     c1.controllable = temp.controllable
+    c1.type = temp.type
 
     c2.didMove = true
     c1.didMove = true
@@ -142,7 +145,7 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             }
         }
 
-        isPossible = true
+        let isPossible = true
         for (let i = 0; i < control.length; i++) {
             let neighbour = g[control[i].y][control[i].x-1]
             if(!(isPossible && control[i].x != 0 && (neighbour.st == e || neighbour.controllable))){
@@ -150,7 +153,6 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             }
         }
 
-        console.log(isPossible);
         if(isPossible){
             for (let i = 0; i < control.length; i++) {
                 changeST(g[control[i].y][control[i].x-1], control[i].cell)
@@ -160,6 +162,7 @@ document.querySelector("body").addEventListener("keydown", function(event) {
     }
 
     if(event.key == "ArrowRight" || event.key.toLowerCase() == "d"){
+        let control = []
         for (let i = 0; i < g.length; i++) {
             for (let j = 0; j < g[i].length; j++) {
                 if(g[i][j].controllable){
@@ -168,7 +171,7 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             }
         }
 
-        isPossible = true
+        let isPossible = true
         for (let i = 0; i < control.length; i++) {
             let neighbour = g[control[i].y][control[i].x+1]
             if(!(isPossible && control[i].x != maxInRows-1 && (neighbour.st == e || neighbour.controllable))){
@@ -185,7 +188,29 @@ document.querySelector("body").addEventListener("keydown", function(event) {
     }
 
     if(event.key == "ArrowUp" || event.key.toLowerCase() == "w" || event.key.toLowerCase() == "r"){
-        
+        let control = []
+        for (let i = 0; i < g.length; i++) {
+            for (let j = 0; j < g[i].length; j++) {
+                if(g[i][j].controllable){
+                    control.push({cell: g[i][j], x: j, y: i})
+                }
+            }
+        }
+
+        let type = control[0].cell.type
+        let isPossible = true
+        if(type == "O"){
+            return;
+        }
+        if(type == "I"){
+            return;
+        }
+
+        for (let c of control) {
+            console.log(c.x + ", " + c.y);
+        }
+
+
     }
 
 
