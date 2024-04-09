@@ -176,7 +176,6 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             }
         }
 
-        console.log(isPossible);
         if(isPossible){
             for (let i = control.length-1; i >= 0; i--) {
                 changeST(g[control[i].y][control[i].x+1], control[i].cell)
@@ -185,6 +184,9 @@ document.querySelector("body").addEventListener("keydown", function(event) {
         }
     }
 
+    if(event.key == "ArrowUp" || event.key.toLowerCase() == "w" || event.key.toLowerCase() == "r"){
+        
+    }
 
 
 
