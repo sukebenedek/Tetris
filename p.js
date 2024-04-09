@@ -28,7 +28,12 @@ class Cell{
         switch (t) {
             case "I":
                 for (let o = 0; o < 4; o++) {
-                    g[0][o + center] = new Cell(false, t)
+                    if(o == 1){
+                        g[0][o + center] = new Cell(false, t, true)
+                    }
+                    else{
+                        g[0][o + center] = new Cell(false, t)
+                    }
                 }
                 break
             case "J":
@@ -67,7 +72,7 @@ class Cell{
                     g[1][center + o] = new Cell(false, t)
                 }
                 for (let o = 0; o < 2; o++) {
-                    if(o == 1){
+                    if(o == 0){
                         g[0][center + o + 1] = new Cell(false, t, true)
                     }
                     else{

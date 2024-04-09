@@ -4,7 +4,8 @@ ctx.fillRect(0, 0, width, height)
 let g = []
 let next = []
 let pause = false
-let fps = 2
+let lines = 0
+let fps = 2.5
 let putNext = true
 for (let i = 0; i < maxInCols; i++) {
     g.push([])
@@ -27,10 +28,10 @@ function drawFrame(){
                 ctx.fillStyle = "blue"
             }
             else if(g[i][j].shouldMove){
-                ctx.fillStyle = "red"
+                ctx.fillStyle = "lightblue"
             }
             else if(g[i][j].st == b){
-                ctx.fillStyle = "gray"
+                ctx.fillStyle = "#b4b4b4"
             }
             else if(g[i][j].st == e){
                 ctx.fillStyle = "white"
@@ -65,11 +66,19 @@ function move(){
     for (let i = g.length-1; i >= 0; i--) {
         for (let j = 0; j < g[i].length; j++) {
             let cell = g[i][j]
-            if(i == maxInCols - 1 && cell.st == b && cell.shouldMove){
+            if(i == maxInCols - 1 && cell.st == b && cell.shouldMove && cell.controllable){
                 stopControllables() //legalsó blockok álljanak meg
+                cell.shouldMove = false
+            }
+            else if(i == maxInCols - 1 && cell.st == b && cell.shouldMove){
+                cell.shouldMove = false
+            }
+            else if (cell.st == b && cell.shouldMove && g[i+1][j].st == b && cell.controllable){ //
+                stopControllables()
+                cell.shouldMove = false
             }
             else if (cell.st == b && cell.shouldMove && g[i+1][j].st == b){ //
-                stopControllables()
+                cell.shouldMove = false
             }
             else if(i != maxInCols - 1 && cell.st == b && g[i+1][j].st == e && cell.shouldMove && !cell.didMove){
                 changeST(g[i+1][j], g[i][j])
@@ -77,9 +86,32 @@ function move(){
         }
     }
 
-    if(g.map((r) => r.filter((a) => a.shouldMove === true)).filter((r) => r.length != 0).length == 0){
+    if(g.map((r) => r.filter((a) => a.shouldMove == true && a.controllable)).filter((r) => r.length != 0).length == 0){
         Cell.placeNewPiece(g, next)
+
     }
+    let theRow = null
+    for (let i = g.length - 1; i >= 0; i--) {
+        if(g[i].every(block => block.st == b && !block.controllable)){
+            theRow = i
+            console.log(theRow);
+            for (let j = 0; j < g[theRow].length; j++) {
+                g[theRow][j] = new Cell(true)
+            }
+            for (let i = theRow; i >= 0; i--) {
+                for (let j = 0; j < g[i].length; j++) {
+                    if(g[i][j].st == b){
+                        g[i][j].shouldMove = true
+                        g[i][j].didMove = false
+                    }
+                }
+            }
+            document.getElementById("L").innerHTML = `Lines - ${++lines}`
+        }
+    }
+
+
+
     drawFrame()
 }
 
@@ -200,11 +232,7 @@ document.querySelector("body").addEventListener("keydown", function(event) {
         }
 
         let type = control[0].cell.type
-        let isPossible = true
         if(type == "O"){
-            return;
-        }
-        if(type == "I"){
             return;
         }
 
@@ -212,19 +240,52 @@ document.querySelector("body").addEventListener("keydown", function(event) {
         for (let c of control) {
             if(c.cell.center){
                 // console.log(c.x + ", " + c.y);
-                clearInterval(moveInterval)
+                // clearInterval(moveInterval)
                 center = {x: c.x, y: c.y}
             }
         }
 
-        list = []
-        for (let i = center.x - 1; i <= center.x + 1; i++) {
-            for (let j = center.y - 1; j <= center.y + 1; j++) {
-                list.push(g[i][j])
+        let list = []
+        let indexes = []
+        for (let i = center.y - 1; i <= center.y + 1; i++) {
+            list.push([])
+            for (let j = center.x - 1; j <= center.x + 1; j++) {
+                list[i - (center.y - 1)].push(g[i][j])
+                indexes.push({x: j, y: i})
             }
         }
-        console.log(list);
 
+        if(type == "I"){
+            list = []
+            indexes = []
+            for (let i = center.y - 2; i <= center.y + 2; i++) {
+                list.push([])
+                for (let j = center.x - 2; j <= center.x + 2; j++) {
+                    list[i - (center.y - 2)].push(g[i][j])
+                    indexes.push({x: j, y: i})
+                }
+            }
+        }
+
+
+        let isPossible = true
+        for (let cell of list.flat(1)) {
+            if((isPossible && cell.st == b && !cell.controllable)){
+                isPossible = false
+            }
+        }
+
+        if(isPossible){
+            rotate(list)
+            list = list.flat(1)
+            // console.log(list);
+            for (let i = 0; i < indexes.length; i++) {
+                const coordinate = indexes[i];
+                g[coordinate.y][coordinate.x] = list[i]
+            }
+        }
+
+        drawFrame()
     }
 
 
@@ -237,6 +298,19 @@ document.querySelector("body").addEventListener("keydown", function(event) {
         move()
     }
 }) 
+
+function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/4257626/js/
+        for(let row = 0; row < matrix.length; row++)
+            for(let col = row; col < matrix[row].length; col++)
+                [matrix[row][col], matrix[col][row]] = [ matrix[col][row], matrix[row][col] ];
+        
+        for(let row = 0; row < matrix.length; row++)
+            matrix[row].reverse();
+        
+        return matrix;
+}
+
+
 
 document.querySelector("body").addEventListener("click", move)
 drawFrame()

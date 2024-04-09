@@ -1,10 +1,10 @@
-top score kukiba mentés
-forgatás
-többi falyta
 robbanás
 vége
-sor törlés
-
+top score kukiba mentés
+forgatás index hiba fix
+forgatás hitbox fix
+interval törlés újraindítás
+next piece
 
 
 
