@@ -1,18 +1,20 @@
 #mainC{
-    border: 1px solid black;
+    border: 3px solid blue;
+    border-radius: 5px;
     margin: auto;
+    margin-bottom: 50px;
     display: block;
     position: absolute;
-    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
 }
 
 body{
-    background-color: darkgray;
     font-family: "Comic Sans MS";
     overflow: hidden;
     margin: 0;
     user-select: none;
+    background-color: #061330;
+    color: white;
 }

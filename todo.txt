@@ -1,9 +1,9 @@
-top score kukiba mentés
-forgatás
-többi falyta
-robbanás
-vége
-sor törlés
+szint robbanás
+forgatás index hiba fix
+forgatás hitbox fix
+next piece
+színek
+pause
 
 
 
