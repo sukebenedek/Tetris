@@ -4,6 +4,8 @@ ctx.fillRect(0, 0, width, height)
 let g = []
 let lines = 0
 let pause = false
+let didStart = false
+let moveInterval
 
 let fps = 2.5
 let maxfps = 5.5
@@ -19,7 +21,7 @@ else{
 }
 document.getElementById("T").innerHTML += topScore
 
-for (let i = 0; i < maxInCols; i++) {
+for (let i = 0; i < maxInCols; i++){
     g.push([])
     for (let j = 0; j < maxInRows; j++) {
         g[i].push(new Cell(true))
@@ -37,27 +39,31 @@ function drawFrame(){
     for (let i = 0; i < g.length; i++) {
         for (let j = 0; j < g[i].length; j++) {
             if(g[i][j].controllable){
-                ctx.fillStyle = "blue"
+                drawCell(g[i][j].color)
             }
             else if(g[i][j].shouldMove){
-                ctx.fillStyle = "lightblue"
+                drawCell("lightblue")
             }
             else if(g[i][j].st == b){
-                ctx.fillStyle = "#b4b4b4"
+                drawCell("#b4b4b4")
             }
             else if(g[i][j].st == e){
-                ctx.fillStyle = "white"
+                drawCell("white")
             }
             else{
                 console.log(`Nínó: ${g[i][j].st}`);
             }
-            ctx.fillRect(pencil.posx, pencil.posy, particleSize - border, particleSize - border)
             pencil.posx += particleSize
 
         }
         pencil.posy += particleSize
         pencil.posx = 0
     }
+}
+
+function drawCell(color){
+    ctx.fillStyle = color
+    ctx.fillRect(pencil.posx, pencil.posy, particleSize - border, particleSize - border)
 }
 
 function move(){
@@ -123,10 +129,10 @@ function move(){
     if(linesCount != 0){
         let score = Number(document.getElementById("S").innerHTML.split(" - ")[1])
         if(!isNaN(score)){
-            document.getElementById("S").innerHTML = `Score - ${score + (linesCount * 100 * (1 + (linesCount - 1) * 0.5)) * 0.8}`
+            document.getElementById("S").innerHTML = `Score - ${score + calcScore(linesCount)}`
         }
         else{
-            document.getElementById("S").innerHTML = `Score - ${(linesCount * 100 * (1 + (linesCount - 1) * 0.5)) * 0.8}`
+            document.getElementById("S").innerHTML = `Score - ${calcScore(linesCount)}`
         }
         if(Number(document.getElementById("S").innerHTML.split(" - ")[1]) > topScore){
             topScore = Number(document.getElementById("S").innerHTML.split(" - ")[1])
@@ -142,6 +148,10 @@ function move(){
     }
 
     drawFrame()
+}
+
+function calcScore(linesCount){
+    return (linesCount * 100 * (1 + (linesCount - 1) * 0.5)) * 0.8
 }
 
 function stopControllables(){
@@ -162,12 +172,13 @@ function stopControllables(){
 }
 
 function changeST(c1, c2){
-    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type, center: c2.center}
+    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type, center: c2.center, color: c2.color}
     c2.st = c1.st
     c2.shouldMove = c1.shouldMove
     c2.controllable = c1.controllable
     c2.type = c1.type
     c2.center = c1.center
+    c2.color = c1.color
 
     
     c1.st = temp.st
@@ -175,6 +186,7 @@ function changeST(c1, c2){
     c1.controllable = temp.controllable
     c1.type = temp.type
     c1.center = temp.center
+    c1.color = temp.color
 
     c2.didMove = true
     c1.didMove = true
@@ -196,7 +208,7 @@ function end(){
 
 
 document.querySelector("body").addEventListener("keydown", function(event) {
-    if(!pause){
+    if(!pause && didStart){
         let control = []
         if(event.key == "ArrowLeft" || event.key.toLowerCase() == "a"){
             for (let i = 0; i < g.length; i++) {
@@ -322,6 +334,12 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             moveInterval = setInterval(move, 1000/fps)
         }
     }
+
+    if((event.key == " " || event.key == "Enter") && !didStart){
+        didStart = true
+        drawFrame()
+        moveInterval = setInterval(move, 1000/fps)
+    }
 }) 
 
 function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/4257626/js/
@@ -338,12 +356,18 @@ function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/
 
 
 document.querySelector("body").addEventListener("click", () => {
-    if(!pause){
+    if(!pause && didStart){
         move()
     }
 })
-drawFrame()
-let moveInterval = setInterval(move, 1000/fps)
+
+ctx.font = "40px Comic Sans";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.fillStyle = "lightblue"
+ctx.fillText("Press Space to start!", width/2, height/2)
+
+
 
 
 

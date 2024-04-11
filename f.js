@@ -3,7 +3,7 @@ let ctx = cvs.getContext("2d")
 
 let particleSize = 40
 let borderSize = particleSize / 8
-let border = 1.5
+let border = 1.2
 
 let width = 10 * particleSize
 width = width - width % particleSize - border;

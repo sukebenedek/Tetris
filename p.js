@@ -1,6 +1,16 @@
 let e = "empty"
 let b = "block"
 
+let colorTable = {
+    "I" : "cyan",
+    "J" : "blue",
+    "L" : "orange",
+    "O" : "yellow",
+    "S" : "green",
+    "T" : "purple",
+    "Z" : "red"
+}
+
 class Cell{
     constructor(isEmpty, type, center = false){
         if(isEmpty){
@@ -10,6 +20,7 @@ class Cell{
             this.controllable = false
             this.type = e
             this.center = false
+            this.color = "white"
         }
         else{
             this.st = b
@@ -18,6 +29,7 @@ class Cell{
             this.controllable = true
             this.type = type
             this.center = center
+            this.color = colorTable[type]
         }
     }
 
