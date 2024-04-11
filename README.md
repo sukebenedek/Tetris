@@ -27,9 +27,11 @@ Ez egy Tetris™ játék, csak jobb
 ## Fejlesztők
 ### Süke Benedek
 ![Süke Benedek](imidzs/beniDev.png)
+
 Benedek már 3 éves kora óta JavaScript programozó akart lenni. Debütáló játékaként elkészítette a Tetris 2t.
 ### Pap László
 ![Pap László](imidzs/laciDev.png)
+
 Pap László alias "Gyökér" egy Nobeldíjas ötletadó, illetve indusztrialista.
 
 Link: https://sukebenedek.github.io/tetris/
