@@ -1,5 +1,5 @@
 # Tetris 2
-Ez egy Tetris™ játék, csak jobb
+Ez egy Tetris játék, csak jobb
 ## Weboldal felépítése:
 >*Beállítás* menű
  - Az oldal kinézetét lehet állítani
