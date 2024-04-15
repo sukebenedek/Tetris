@@ -1,10 +1,10 @@
-szint robbanás
 forgatás index hiba fix
 forgatás hitbox fix
 next piece
-színek
-pause
-
+pause / menu
+border
+robbanás div anomália
+git projrkt!!!!
 
 
 

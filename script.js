@@ -9,7 +9,7 @@ let moveInterval
 
 let fps = 2.5
 let maxfps = 5.5
-let fpsIncrease = 0.04
+let fpsIncrease = 0.45
 
 let topScore = 0
 let cookie = document.cookie
@@ -42,10 +42,12 @@ function drawFrame(){
                 drawCell(g[i][j].color)
             }
             else if(g[i][j].shouldMove){
-                drawCell("lightblue")
+                // drawCell("lightblue")
+                drawCell(g[i][j].color)
             }
             else if(g[i][j].st == b){
-                drawCell("#b4b4b4")
+                // drawCell("#b4b4b4")
+                drawCell(g[i][j].color)
             }
             else if(g[i][j].st == e){
                 drawCell("white")
@@ -107,7 +109,7 @@ function move(){
     let linesCount = 0
     let theRow = null
     for (let i = g.length - 1; i >= 0; i--) {
-        if(g[i].every(block => block.st == b && !block.controllable)){
+        if(g[i].every(block => block.st == b && !block.controllable && !block.shouldMove) || g[i].every(block => block.st == b && !block.controllable && block.shouldMove)){
             theRow = i
             for (let j = 0; j < g[theRow].length; j++) {
                 g[theRow][j] = new Cell(true)
@@ -122,7 +124,12 @@ function move(){
             }
             document.getElementById("L").innerHTML = `Lines - ${++lines}`
             linesCount++
-            fps += fpsIncrease
+            if(lines % 10 == 0){
+                fps += fpsIncrease
+                explode()
+                document.getElementById("E").innerHTML = `Level - ${((lines - (lines % 10)) / 10) + 1}`
+                
+            }
         }
     }
 
@@ -198,7 +205,7 @@ function end(){
     ctx.fillStyle = "black"
     ctx.fillRect(0, 0, width, height)
     ctx.fillStyle = "red"
-    ctx.font = "60px Comic Sans";
+    ctx.font = "60px Comic Sans MS";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("You lost!", width/2, height/2 - 35);
@@ -340,7 +347,18 @@ document.querySelector("body").addEventListener("keydown", function(event) {
         drawFrame()
         moveInterval = setInterval(move, 1000/fps)
     }
-}) 
+})
+
+function explode(){
+    let div = document.getElementById("explosion")
+    div.style.backgroundImage = "url(imidzs/explosion.gif)"
+    div.style.position = "relative"
+    setTimeout(function() {
+        div.style.backgroundImage = "";
+    div.style.position = "absolute"
+
+    }, 1100);
+}
 
 function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/4257626/js/
     for(let row = 0; row < matrix.length; row++)
@@ -353,15 +371,13 @@ function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/
     return matrix;
 }
 
-
-
 document.querySelector("body").addEventListener("click", () => {
     if(!pause && didStart){
         move()
     }
 })
 
-ctx.font = "40px Comic Sans";
+ctx.font = "37px Comic Sans MS";
 ctx.textAlign = "center";
 ctx.textBaseline = "middle";
 ctx.fillStyle = "lightblue"
