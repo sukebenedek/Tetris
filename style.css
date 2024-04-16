@@ -14,7 +14,6 @@ body{
     font-family: "Comic Sans MS";
     overflow: hidden;
     margin: 0;
-    user-select: none;
     background-color: #061330;
     color: white;
 }
@@ -28,4 +27,29 @@ body{
     left: calc(50% - 250px);
     transform: translateX(-50%);
     transform: translateY(50%);
+}
+
+#set{
+    z-index:2;
+    position:absolute;
+}
+
+.settings{
+    margin: auto;
+    width: 350px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10000;
+    border: 1px solid black;
+    border-radius: 4%;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    color: black;
+}
+
+.settings label {
+    font-size: 20px;
 }

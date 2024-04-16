@@ -186,6 +186,8 @@ function end(){
     ctx.textBaseline = "middle";
     ctx.fillText("You lost!", width/2, height/2 - 35);
     ctx.fillText(`Score - ${document.getElementById("S").innerHTML.split(" - ")[1]}`, width/2, height/2 + 35)
+    document.getElementById("N").style.display = "none"
+    document.getElementById("nextC").style.display = "none"
 }
 
 
@@ -348,11 +350,11 @@ function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/
     return matrix;
 }
 
-document.querySelector("body").addEventListener("click", () => {
-    if(!pause && didStart){
-        move()
-    }
-})
+// document.querySelector("body").addEventListener("click", () => {
+//     if(!pause && didStart){
+//         move()
+//     }
+// })
 
 ctx.font = "37px Comic Sans MS";
 ctx.textAlign = "center";
@@ -360,7 +362,20 @@ ctx.textBaseline = "middle";
 ctx.fillStyle = "lightblue"
 ctx.fillText("Press Space to start!", width/2, height/2)
 
-
+let isItOut = false
+let set = document.getElementById("set")
+let setdiv = document.querySelector(".settings")
+set.addEventListener("click", () => {
+    end = true
+    isItOut && end ? end = false : end = true
+    isItOut = !isItOut
+    if(setdiv.style.display == "none"){
+        setdiv.style.display = "block"
+    }
+    else{
+        setdiv.style.display = "none"
+    }
+})
 
 
 
