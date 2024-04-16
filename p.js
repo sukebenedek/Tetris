@@ -33,10 +33,8 @@ class Cell{
         }
     }
 
-    static placeNewPiece(g){
+    static placeNewPiece(g, center, t){
         // let t = randomElement(["I", "J", "L", "O", "S", "T", "Z"])
-        let t = randomElement(["I", "J", "L", "O", "S", "T", "Z"])
-        let center = Math.floor(maxInRows/2) - 2
         switch (t) {
             case "I":
                 for (let o = 0; o < 4; o++) {

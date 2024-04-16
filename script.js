@@ -28,7 +28,7 @@ for (let i = 0; i < maxInCols; i++){
     }
 }
 
-Cell.placeNewPiece(g)
+Cell.placeNewPiece(g, Math.floor(maxInRows/2) - 2, randomElement(["I", "J", "L", "O", "S", "T", "Z"]))
 
 let pencil = {posx: 0, posy: 0}
 function drawFrame(){
@@ -39,18 +39,18 @@ function drawFrame(){
     for (let i = 0; i < g.length; i++) {
         for (let j = 0; j < g[i].length; j++) {
             if(g[i][j].controllable){
-                drawCell(g[i][j].color)
+                drawCell(g[i][j].color, pencil, ctx)
             }
             else if(g[i][j].shouldMove){
                 // drawCell("lightblue")
-                drawCell(g[i][j].color)
+                drawCell(g[i][j].color, pencil, ctx)
             }
             else if(g[i][j].st == b){
                 // drawCell("#b4b4b4")
-                drawCell(g[i][j].color)
+                drawCell(g[i][j].color, pencil, ctx)
             }
             else if(g[i][j].st == e){
-                drawCell("white")
+                drawCell("white", pencil, ctx)
             }
             else{
                 console.log(`Nínó: ${g[i][j].st}`);
@@ -61,11 +61,6 @@ function drawFrame(){
         pencil.posy += particleSize
         pencil.posx = 0
     }
-}
-
-function drawCell(color){
-    ctx.fillStyle = color
-    ctx.fillRect(pencil.posx, pencil.posy, particleSize - border, particleSize - border)
 }
 
 function move(){
@@ -148,7 +143,9 @@ function move(){
     }
 
     if(g.map((r) => r.filter((a) => a.shouldMove == true && a.controllable)).filter((r) => r.length != 0).length == 0){
-        Cell.placeNewPiece(g)
+        Cell.placeNewPiece(g, Math.floor(maxInRows/2) - 2, nextPiece)
+        nextPiece = randomElement(["I", "J", "L", "O", "S", "T", "Z"])
+        drawNext()
         if(pause){
             return;
         }
@@ -176,27 +173,6 @@ function stopControllables(){
         stopIt.shouldMove = false
         stopIt.didMove = true
     }
-}
-
-function changeST(c1, c2){
-    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type, center: c2.center, color: c2.color}
-    c2.st = c1.st
-    c2.shouldMove = c1.shouldMove
-    c2.controllable = c1.controllable
-    c2.type = c1.type
-    c2.center = c1.center
-    c2.color = c1.color
-
-    
-    c1.st = temp.st
-    c1.shouldMove = temp.shouldMove
-    c1.controllable = temp.controllable
-    c1.type = temp.type
-    c1.center = temp.center
-    c1.color = temp.color
-
-    c2.didMove = true
-    c1.didMove = true
 }
 
 function end(){
@@ -345,6 +321,8 @@ document.querySelector("body").addEventListener("keydown", function(event) {
     if((event.key == " " || event.key == "Enter") && !didStart){
         didStart = true
         drawFrame()
+        drawNext()
+        document.getElementById("N").style.display = "block"
         moveInterval = setInterval(move, 1000/fps)
     }
 })
@@ -355,8 +333,7 @@ function explode(){
     div.style.position = "relative"
     setTimeout(function() {
         div.style.backgroundImage = "";
-    div.style.position = "absolute"
-
+        div.style.position = "absolute"
     }, 1100);
 }
 
