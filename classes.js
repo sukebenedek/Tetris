@@ -11,6 +11,27 @@ let colorTable = {
     "Z" : "red"
 }
 
+let borderColorAmount = 100
+
+class Color{
+    constructor(c){
+        if(c == "white" || c == window.getComputedStyle(document.body, null).getPropertyValue('background-color')){
+            this.def = c
+            this.light = c
+            this.dark = c
+        }else{
+            this.def = c
+            this.light = Color.decrease(nameToRgb(c), -borderColorAmount)
+            this.dark = Color.decrease(nameToRgb(c), borderColorAmount)
+        }
+
+    }
+    
+    static decrease(c, amount) {
+        return `rgb(${Math.max(0, Math.min(255, c[0] - amount))}, ${Math.max(0, Math.min(255, c[1] - amount))}, ${Math.max(0, Math.min(255, c[2] - amount))})`;
+    }
+}
+
 class Cell{
     constructor(isEmpty, type, center = false){
         if(isEmpty){
@@ -20,7 +41,7 @@ class Cell{
             this.controllable = false
             this.type = e
             this.center = false
-            this.color = "white"
+            this.color = new Color("white")
         }
         else{
             this.st = b
@@ -29,7 +50,7 @@ class Cell{
             this.controllable = true
             this.type = type
             this.center = center
-            this.color = colorTable[type]
+            this.color = new Color(colorTable[type])
         }
     }
 
@@ -116,14 +137,4 @@ class Cell{
                 break;
         }
     }
-}
-
-function replace(withwhat, pos){
-    if(pos.st == b){
-        end()
-    }
-    else{
-        changeST(pos, withwhat)
-    }
-
 }

@@ -1,3 +1,20 @@
+let cvs = document.getElementById("mainC")
+let ctx = cvs.getContext("2d")
+
+let particleSize = 40
+let borderSize = particleSize / 8
+let border = 1.2
+
+let width = 10 * particleSize
+width = width - width % particleSize - border;
+let height = 19 * particleSize
+height = height - height % particleSize - border;
+cvs.width = width
+cvs.height = height
+
+let maxInCols = (height + border) / particleSize
+let maxInRows = (width + border) / particleSize
+
 ctx.fillStyle = "black"
 ctx.fillRect(0, 0, width, height)
 
@@ -8,8 +25,8 @@ let didStart = false
 let moveInterval
 
 let fps = 2.5
-let maxfps = 5.5
-let fpsIncrease = 0.45
+let maxfps = 7.5
+let fpsIncrease = 0.5
 
 let topScore = 0
 let cookie = document.cookie
@@ -28,6 +45,7 @@ for (let i = 0; i < maxInCols; i++){
     }
 }
 
+let nextPiece = randomElement(["I", "J", "L", "O", "S", "T", "Z"])
 Cell.placeNewPiece(g, Math.floor(maxInRows/2) - 2, randomElement(["I", "J", "L", "O", "S", "T", "Z"]))
 
 let pencil = {posx: 0, posy: 0}
@@ -50,7 +68,7 @@ function drawFrame(){
                 drawCell(g[i][j].color, pencil, ctx)
             }
             else if(g[i][j].st == e){
-                drawCell("white", pencil, ctx)
+                drawCell(new Color("white"), pencil, ctx)
             }
             else{
                 console.log(`Nínó: ${g[i][j].st}`);
@@ -154,6 +172,117 @@ function move(){
     drawFrame()
 }
 
+function drawNext(){
+    let g = []
+    for (let i = 0; i < 2; i++){
+        g.push([])
+        for (let j = 0; j < 4; j++) {
+            g[i].push(new Cell(true))
+        }
+    }
+    Cell.placeNewPiece(g, 0, nextPiece)
+
+    let cvs2 = document.getElementById("nextC")
+    let ctx2 = cvs2.getContext("2d")
+
+    let width = 4 * particleSize
+    width = width - width % particleSize - border;
+    let height = 2 * particleSize
+    height = height - height % particleSize - border;
+
+    cvs2.width = width
+    cvs2.height = height
+
+    ctx2.fillStyle = window.getComputedStyle(document.body, null).getPropertyValue('background-color')
+    ctx2.fillRect(0, 0, width, height)
+
+    let pencil = {posx: 0, posy: 0}
+    pencil.posx = 0
+    pencil.posy = 0
+    for (let i = 0; i < g.length; i++) {
+        for (let j = 0; j < g[i].length; j++) {
+            if(g[i][j].controllable){
+                drawCell(g[i][j].color, pencil, ctx2)
+            }
+            else if(g[i][j].shouldMove){
+                // drawCell("lightblue")
+                drawCell(g[i][j].color, pencil, ctx2)
+            }
+            else if(g[i][j].st == b){
+                // drawCell("#b4b4b4")
+                drawCell(g[i][j].color, pencil, ctx2)
+            }
+            else if(g[i][j].st == e){
+                drawCell(new Color(window.getComputedStyle(document.body, null).getPropertyValue('background-color')), pencil, ctx2)
+            }
+            else{
+                console.log(`Nínó: ${g[i][j].st}`);
+            }
+            pencil.posx += particleSize
+
+        }
+        pencil.posy += particleSize
+        pencil.posx = 0
+    }
+
+}
+
+function nameToRgb(name) { //https://stackoverflow.com/questions/26414770/getting-the-rgb-values-for-a-css-html-named-color-in-javascript
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.fillStyle = name;
+    context.fillRect(0,0,1,1);
+    let d = context.getImageData(0,0,1,1).data
+    return [d[0], d[1], d[2]]
+}
+
+function drawCell(color, pencil, ctx){
+    let borderSize = 3.5
+    ctx.fillStyle = color.def
+    ctx.fillRect(pencil.posx, pencil.posy, particleSize - border, particleSize - border)
+
+    ctx.fillStyle = color.light
+    ctx.fillRect(pencil.posx, pencil.posy, particleSize - border, borderSize);
+    ctx.fillRect(pencil.posx, pencil.posy, borderSize, particleSize - border)
+    ctx.fillStyle = color.dark
+    ctx.fillRect(pencil.posx, pencil.posy + particleSize - border - borderSize, particleSize - border, borderSize)
+    ctx.fillRect(pencil.posx + particleSize - border - borderSize, pencil.posy, borderSize, particleSize - border);
+}
+
+function changeST(c1, c2){
+    let temp = {st: c2.st, shouldMove: c2.shouldMove, controllable: c2.controllable, type: c2.type, center: c2.center, color: c2.color.def}
+    c2.st = c1.st
+    c2.shouldMove = c1.shouldMove
+    c2.controllable = c1.controllable
+    c2.type = c1.type
+    c2.center = c1.center
+    c2.color = new Color(c1.color.def)
+
+    
+    c1.st = temp.st
+    c1.shouldMove = temp.shouldMove
+    c1.controllable = temp.controllable
+    c1.type = temp.type
+    c1.center = temp.center
+    c1.color = new Color(temp.color)
+
+    c2.didMove = true
+    c1.didMove = true
+}
+
+function randomElement(list) {
+    return list[Math.floor(Math.random() * list.length)];
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
 function calcScore(linesCount){
     return (linesCount * 100 * (1 + (linesCount - 1) * 0.5)) * 0.8
 }
@@ -190,7 +319,15 @@ function end(){
     document.getElementById("nextC").style.display = "none"
 }
 
+function replace(withwhat, pos){
+    if(pos.st == b){
+        end()
+    }
+    else{
+        changeST(pos, withwhat)
+    }
 
+}
 
 document.querySelector("body").addEventListener("keydown", function(event) {
     if(!pause && didStart){
