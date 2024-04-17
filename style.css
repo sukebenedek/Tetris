@@ -29,7 +29,7 @@ body{
     transform: translateY(50%);
 }
 
-#set{
+#set, #P{
     z-index:2;
     position:absolute;
 }
@@ -52,4 +52,16 @@ body{
 
 .settings label {
     font-size: 20px;
+}
+
+#restart{
+    width: max-content;
+    font-size: 72px;
+    position: fixed;
+    left: 50%;
+    z-index: 10000;
+    transform: translate(-50%, 600px);
+}
+#restart:hover{
+    text-decoration: underline;
 }

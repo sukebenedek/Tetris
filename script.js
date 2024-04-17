@@ -21,6 +21,8 @@ ctx.fillRect(0, 0, width, height)
 let g = []
 let lines = 0
 let pause = false
+let firstTime = true
+let paused = true
 let didStart = false
 let moveInterval
 
@@ -317,6 +319,10 @@ function end(){
     ctx.fillText(`Score - ${document.getElementById("S").innerHTML.split(" - ")[1]}`, width/2, height/2 + 35)
     document.getElementById("N").style.display = "none"
     document.getElementById("nextC").style.display = "none"
+    pp.style.display = "none"
+    let div = document.getElementById("restart")
+    div.innerHTML = "Restart"
+    div.style.position = "fixed"
 }
 
 function replace(withwhat, pos){
@@ -329,8 +335,9 @@ function replace(withwhat, pos){
 
 }
 
-document.querySelector("body").addEventListener("keydown", function(event) {
-    if(!pause && didStart){
+document.querySelector("body").addEventListener("keydown", keydown)
+function keydown(event) {
+    if(!pause && didStart && paused){
         let control = []
         if(event.key == "ArrowLeft" || event.key.toLowerCase() == "a"){
             for (let i = 0; i < g.length; i++) {
@@ -456,23 +463,29 @@ document.querySelector("body").addEventListener("keydown", function(event) {
             moveInterval = setInterval(move, 1000/fps)
         }
     }
+    
+    if((event.key == " ")){
+        PP()
+    }
 
     if((event.key == " " || event.key == "Enter") && !didStart){
         didStart = true
         drawFrame()
         drawNext()
         document.getElementById("N").style.display = "block"
-        moveInterval = setInterval(move, 1000/fps)
+        // moveInterval = setInterval(move, 1000/fps) 
     }
-})
+
+
+}
 
 function explode(){
     let div = document.getElementById("explosion")
     div.style.backgroundImage = "url(imidzs/explosion.gif)"
-    div.style.position = "relative"
+    div.style.position = "fixed"
     setTimeout(function() {
         div.style.backgroundImage = "";
-        div.style.position = "absolute"
+        div.style.position = "fixed"
     }, 1100);
 }
 
@@ -503,8 +516,6 @@ let isItOut = false
 let set = document.getElementById("set")
 let setdiv = document.querySelector(".settings")
 set.addEventListener("click", () => {
-    end = true
-    isItOut && end ? end = false : end = true
     isItOut = !isItOut
     if(setdiv.style.display == "none"){
         setdiv.style.display = "block"
@@ -514,9 +525,27 @@ set.addEventListener("click", () => {
     }
 })
 
-
-
-
+let pp = document.getElementById("P")
+pp.addEventListener("click", PP)
+function PP(){
+    if(firstTime){
+        pp.src = "imidzs\\pause.png"
+        firstTime = false
+        paused = false
+        keydown({key: " "})
+    }
+    else{
+        if(paused){
+            pp.src = "imidzs\\play.png"
+            clearInterval(moveInterval)
+        }
+        else{
+            pp.src = "imidzs\\pause.png"
+            moveInterval = setInterval(move, 1000/fps)
+        }
+        paused = !paused
+    }
+}
 
 
 

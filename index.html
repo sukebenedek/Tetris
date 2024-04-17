@@ -9,8 +9,8 @@
 </head>
 <body>
     <img src="imidzs/gear.png" alt="Settings" id="set" style="position: absolute; margin-left: -10px; margin-top: -30px; font-size: 20px; width: 150px;">
-    <!-- <input type="button" value="Settings" id="set" style="position: absolute; margin-left: 30px; font-size: 20px;"> -->
-    <div class="settings" style="display: none; position: absolute;">
+    <img src="imidzs/play.png" alt="Play/Pause" id="P" style="margin-left: -10px; margin-top: -30px; font-size: 20px; width: 150px; left: calc(100% - 150px);">
+    <div class="settings" style="display: none; position: fixed;">
         <h1>Settings</h1>
         <br>
         <label for="theme">Color theme:</label>
@@ -22,11 +22,12 @@
         </select>
     </div>
     <div id="explosion"></div>
+    <div id="restart" onclick="location.reload()"></div>
     <p class="fw-bold text-center" style="font-size: 50px; margin-top: 30px;" id="L">Tetris</p>
     <div class="text-center">
         <div class="row">
             <div class="col-4">
-                <p class="fw-bold" style="font-size: 40px; margin-top: 80px;" id="E">Level - 0</p>
+                <p class="fw-bold" style="font-size: 40px; margin-top: 80px;" id="E">Level - 1</p>
             </div>
             <div class="col-4">
                 <canvas id="mainC"></canvas>
