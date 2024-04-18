@@ -3,13 +3,20 @@ webBody =  document.querySelector("body");
 select.addEventListener('change', changeTheme);
 
 function changeTheme(){
-    console.log(select.value);
-    if (select.value == 'dark'){
+    if (select.value == "dark"){
         webBody.style.backgroundColor = "black"
-        for (let i = 0; i < g.length; i++) {
-            for (let j = 0; j < g[i].length; j++) {
-                g[i].color = "black"
-            }
-        }
+    }
+    if (select.value == "light"){
+        webBody.style.backgroundColor = "bisque"
+    }
+    if (select.value == "egypt"){
+        webBody.style.backgroundImage = `url("imidzs/piramisok.jpg")`;
+        webBody.style.backgroundRepeat = "no-repeat";
+        webBody.style.backgroundSize = "cover"
+    }
+    if (select.value == "cyber"){
+        webBody.style.backgroundImage = `url("imidzs/cyber.jpg")`;
+        webBody.style.backgroundRepeat = "no-repeat";
+        webBody.style.backgroundSize = "cover"
     }
 }
