@@ -144,6 +144,8 @@ function move(){
                     fps += fpsIncrease
                     explode()
                     clearInterval(moveInterval)
+                    clearInterval(moveInterval)
+                    clearInterval(moveInterval)
                     moveInterval = setInterval(move, 1000/fps)
                     document.getElementById("E").innerHTML = `Level - ${((lines - (lines % 10)) / 10) + 1}`
                 }
