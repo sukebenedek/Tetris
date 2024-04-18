@@ -140,10 +140,13 @@ function move(){
             document.getElementById("L").innerHTML = `Lines - ${++lines}`
             linesCount++
             if(lines % 10 == 0){
-                fps += fpsIncrease
-                explode()
-                document.getElementById("E").innerHTML = `Level - ${((lines - (lines % 10)) / 10) + 1}`
-                
+                if(fps < maxfps){
+                    fps += fpsIncrease
+                    explode()
+                    clearInterval(moveInterval)
+                    moveInterval = setInterval(move, 1000/fps)
+                    document.getElementById("E").innerHTML = `Level - ${((lines - (lines % 10)) / 10) + 1}`
+                }
             }
         }
     }
