@@ -444,14 +444,26 @@ function keydown(event) {
 
             let isPossible = true
             for (let cell of list.flat(1)) {
+                console.log(cell.st);
                 if((isPossible && cell.st == b && !cell.controllable)){
                     isPossible = false
                 }
             }
 
+
+            // let virtualRotate = rotate(list)
+            // for (let i = 0; i < list.length; i++) {
+            //     for (let j = 0; j < list[i].length; j++) {
+            //         let cell = list[i][j]
+            //         let rotatedcell = virtualRotate[i][j]
+            //         if(isPossible && cell.st == b && !cell.controllable && rotatedcell.controllable){
+            //             isPossible = false
+            //         }
+            //     }
+            // }
+
             if(isPossible){
-                rotate(list)
-                list = list.flat(1)
+                list = rotate(list).flat(1)
                 // console.log(list);
                 for (let i = 0; i < indexes.length; i++) {
                     const coordinate = indexes[i];
@@ -494,16 +506,36 @@ function explode(){
     }, 1100);
 }
 
-function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/4257626/js/
-    for(let row = 0; row < matrix.length; row++)
-        for(let col = row; col < matrix[row].length; col++)
-            [matrix[row][col], matrix[col][row]] = [ matrix[col][row], matrix[row][col] ];
+// function rotate(matrix){ //https://leetcode.com/problems/rotate-image/solutions/4257626/js/
+//     for(let row = 0; row < matrix.length; row++)
+//         for(let col = row; col < matrix[row].length; col++)
+//             [matrix[row][col], matrix[col][row]] = [ matrix[col][row], matrix[row][col] ];
     
-    for(let row = 0; row < matrix.length; row++)
-        matrix[row].reverse();
+//     for(let row = 0; row < matrix.length; row++)
+//         matrix[row].reverse();
     
-    return matrix;
+//     return matrix;
+// }
+
+function rotate(matrix) {
+    const n = matrix.length;
+    const rotatedMatrix = [];
+    
+    // Create a new matrix filled with zeros
+    for (let i = 0; i < n; i++) {
+        rotatedMatrix.push(new Array(n).fill(0));
+    }
+
+    // Populate the rotated matrix
+    for (let row = 0; row < n; row++) {
+        for (let col = 0; col < n; col++) {
+            rotatedMatrix[col][n - 1 - row] = matrix[row][col];
+        }
+    }
+
+    return rotatedMatrix;
 }
+
 
 // document.querySelector("body").addEventListener("click", () => {
 //     if(!pause && didStart){
