@@ -142,6 +142,7 @@ function move(){
             if(lines % 10 == 0){
                 if(fps < maxfps){
                     fps += fpsIncrease
+                    if (fps > maxfps) fps = maxfps
                     explode()
                     clearInterval(moveInterval)
                     clearInterval(moveInterval)
