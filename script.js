@@ -140,16 +140,9 @@ function move(){
             document.getElementById("L").innerHTML = `Lines - ${++lines}`
             linesCount++
             if(lines % 10 == 0){
-                if(fps < maxfps){
                     fps += fpsIncrease
-                    if (fps > maxfps) fps = maxfps
                     explode()
-                    clearInterval(moveInterval)
-                    clearInterval(moveInterval)
-                    clearInterval(moveInterval)
-                    moveInterval = setInterval(move, 1000/fps)
                     document.getElementById("E").innerHTML = `Level - ${((lines - (lines % 10)) / 10) + 1}`
-                }
             }
         }
     }
@@ -445,7 +438,6 @@ function keydown(event) {
 
             let isPossible = true
             for (let cell of list.flat(1)) {
-                console.log(cell.st);
                 if((isPossible && cell.st == b && !cell.controllable)){
                     isPossible = false
                 }
@@ -457,7 +449,9 @@ function keydown(event) {
             //     for (let j = 0; j < list[i].length; j++) {
             //         let cell = list[i][j]
             //         let rotatedcell = virtualRotate[i][j]
-            //         if(isPossible && cell.st == b && !cell.controllable && rotatedcell.controllable){
+            //         console.log(e + b);
+            //         console.log(cell.st + ": " + cell.controllable + ", " + rotatedcell.st + ": " + rotatedcell.controllable);
+            //         if(isPossible && ((cell.st == b && !cell.controllable && (rotatedcell.st == e || rotatedcell.controllable)))){
             //             isPossible = false
             //         }
             //     }
