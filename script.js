@@ -622,7 +622,9 @@ document.querySelector("#Border").addEventListener('change', () => {
     else{
         border = 0
     }
-    drawFrame()
+    if(!pause && didStart){
+        drawFrame()
+    }
 });
 
 
