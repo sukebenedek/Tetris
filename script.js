@@ -437,14 +437,40 @@ function keydown(event) {
 
 
             let isPossible = true
-            for (let cell of list.flat(1)) {
-                if((isPossible && cell.st == b && !cell.controllable)){
+            let virtualRotate = rotate(list)
+            let rotatedC = []
+
+            for (let i = 0; i < virtualRotate.length; i++) {
+                for (let j = 0; j < virtualRotate[i].length; j++) {
+                    if(virtualRotate[i][j].controllable){
+                        rotatedC.push({cell: virtualRotate[i][j], x: j, y: i})
+                    }
+                }
+            }
+
+            // for (let cell of list.flat(1)) {
+            //     if((isPossible && cell.st == b && !cell.controllable)){
+            //         isPossible = false
+            //     }
+            // }
+
+            for (let i = 0; i < list.length; i++) {
+                for (let j = 0; j < list[i].length; j++) {
+                    if(list[i][j].controllable){
+                        list[i][j] = new Cell(true)
+                    }
+                }
+            }
+
+            for (let i = 0; i < rotatedC.length; i++) {
+                let rortatedControllable = rotatedC[i]
+                let cellOnThatPlace = list[rortatedControllable.y][rortatedControllable.x]
+                if((isPossible && !cellOnThatPlace.controllable && cellOnThatPlace.st == b)){
+                    console.log(cellOnThatPlace);
                     isPossible = false
                 }
             }
 
-
-            // let virtualRotate = rotate(list)
             // for (let i = 0; i < list.length; i++) {
             //     for (let j = 0; j < list[i].length; j++) {
             //         let cell = list[i][j]
@@ -458,8 +484,14 @@ function keydown(event) {
             // }
 
             if(isPossible){
-                list = rotate(list).flat(1)
-                // console.log(list);
+                for (let i = 0; i < rotatedC.length; i++) {
+                    let rortatedControllable = rotatedC[i]
+                    let cellOnThatPlace = list[rortatedControllable.y][rortatedControllable.x]
+                    changeST(cellOnThatPlace, rortatedControllable.cell)
+                }
+
+
+                list = list.flat(1)
                 for (let i = 0; i < indexes.length; i++) {
                     const coordinate = indexes[i];
                     g[coordinate.y][coordinate.x] = list[i]
@@ -583,7 +615,24 @@ select = document.querySelector("#theme");
 webBody =  document.querySelector("body");
 select.addEventListener('change', changeTheme);
 
+document.querySelector("#Border").addEventListener('change', () => {
+    if (document.querySelector("#Border").checked) {
+        border = 1.2
+    }
+    else{
+        border = 0
+    }
+    drawFrame()
+});
+
+
 function changeTheme(){
+    if (select.value == "default"){
+        webBody.style.backgroundColor = "#061330"
+        webBody.style.color = "white"
+        webBody.style.backgroundImage = "none";
+        webBody.style.fontFamily = "Comic Sans MS";
+    }
     if (select.value == "dark"){
         webBody.style.backgroundColor = "black"
         webBody.style.color = "white"
